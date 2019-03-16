@@ -15,6 +15,7 @@ import usermanagement.services.UserService;
 import java.util.Date;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,5 +49,14 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"Hari\",\"email\":\"hari@yopmail.com\", \"password\":\"password123\"}"))
                 .andExpect(status().is(409));
         verify(mockUserService, times(1)).create(any(UserDetail.class));
+    }
+
+    @Test
+    public void shouldListOfUsers_whenGetUsersIsCalled() throws Exception {
+        when(mockUserService.create(any(UserDetail.class))).thenReturn(new UserDetail("Hari", "hari@yopmail.com", "password123",new Date(1552745055166l)));
+        mvc.perform(get("/api/users")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(200));
+        verify(mockUserService, times(1)).retrieveAll();
     }
 }

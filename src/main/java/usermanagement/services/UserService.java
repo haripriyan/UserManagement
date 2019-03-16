@@ -6,6 +6,8 @@ import usermanagement.exceptions.UserAlreadyExistsException;
 import usermanagement.models.UserDetail;
 import usermanagement.repositories.UserDetailsRepository;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -20,5 +22,9 @@ public class UserService {
         if(userDetailsRepository.existsById(userDetail.getName()))
             throw new UserAlreadyExistsException();
         return userDetailsRepository.save(userDetail);
+    }
+
+    public List<UserDetail> retrieveAll() {
+        return (List<UserDetail>) userDetailsRepository.findAll();
     }
 }

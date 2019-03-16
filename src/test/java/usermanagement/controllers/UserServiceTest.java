@@ -37,4 +37,10 @@ public class UserServiceTest {
         when(mockUserDetailsRepo.existsById("Hari")).thenReturn(true);
         subject.create(userDetail);
     }
+
+    @Test
+    public void shouldReturnAllUserLoginDetails_whenRetrievingAll() {
+        subject.retrieveAll();
+        verify(mockUserDetailsRepo, times(1)).findAll();
+    }
 }
