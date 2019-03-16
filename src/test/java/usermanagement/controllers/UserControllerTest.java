@@ -8,8 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import usermanagement.exceptions.UserAlreadyExistsException;
 import usermanagement.models.UserDetail;
-import usermanagement.requests.CreateUserRequest;
 import usermanagement.services.UserService;
 
 import java.util.Date;
@@ -38,6 +38,15 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"Hari\",\"email\":\"hari@yopmail.com\", \"password\":\"password123\"}"))
                 .andExpect(status().is(200))
                 .andExpect(content().string("{\"name\":\"Hari\",\"email\":\"hari@yopmail.com\",\"lastLogin\":1552745055166}"));
+        verify(mockUserService, times(1)).create(any(UserDetail.class));
+    }
+
+    @Test
+    public void shouldReturn409_whenUserNameAlreadyExists() throws Exception {
+        when(mockUserService.create(any(UserDetail.class))).thenThrow(new UserAlreadyExistsException());
+        mvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"Hari\",\"email\":\"hari@yopmail.com\", \"password\":\"password123\"}"))
+                .andExpect(status().is(409));
         verify(mockUserService, times(1)).create(any(UserDetail.class));
     }
 }

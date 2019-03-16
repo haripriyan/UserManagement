@@ -2,6 +2,7 @@ package usermanagement.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import usermanagement.exceptions.UserAlreadyExistsException;
 import usermanagement.models.UserDetail;
 import usermanagement.repositories.UserDetailsRepository;
 
@@ -15,7 +16,9 @@ public class UserService {
         this.userDetailsRepository = userDetailsRepository;
     }
 
-    public UserDetail create(UserDetail userDetail) {
+    public UserDetail create(UserDetail userDetail) throws UserAlreadyExistsException {
+        if(userDetailsRepository.existsById(userDetail.getName()))
+            throw new UserAlreadyExistsException();
         return userDetailsRepository.save(userDetail);
     }
 }

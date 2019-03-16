@@ -22,13 +22,28 @@ public class UserManagementFunctionalTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void shouldCreateUserWhenValidValuesArePassed() {
+    public void shouldCreateUser_whenValidValuesArePassed() {
         CreateUserRequest request = new CreateUserRequest("Hari", "hari@yopmail.com", "password123");
         ResponseEntity<UserDetail> responseEntity = restTemplate.postForEntity("/api/users", request, UserDetail.class);
         UserDetail actualUserDetail = responseEntity.getBody();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actualUserDetail.getName()).isEqualTo(request.getName());
         assertThat(actualUserDetail.getEmail()).isEqualTo(request.getEmail());
+    }
+
+    @Test
+    public void shouldReturn409_whenUserNameAlreadyExists() {
+        CreateUserRequest request = new CreateUserRequest("Hari", "hari@yopmail.com", "password123");
+        restTemplate.postForEntity("/api/users", request, UserDetail.class);
+        ResponseEntity<UserDetail> responseEntity = restTemplate.postForEntity("/api/users", request, UserDetail.class);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Test
+    public void shouldReturn400_whenRequestIsInValid() {
+        CreateUserRequest request = new CreateUserRequest(null, "hari@yopmail.com", "password123");
+        ResponseEntity<UserDetail> responseEntity = restTemplate.postForEntity("/api/users", request, UserDetail.class);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }
 

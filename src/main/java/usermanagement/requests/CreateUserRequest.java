@@ -1,9 +1,14 @@
 package usermanagement.requests;
 
+import javax.validation.constraints.NotNull;
+
 public class CreateUserRequest {
 
+    @NotNull
     private String name;
+    @NotNull
     private String email;
+    @NotNull
     private String password;
 
     public CreateUserRequest(String name, String email, String password) {
