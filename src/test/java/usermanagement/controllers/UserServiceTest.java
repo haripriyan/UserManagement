@@ -26,7 +26,7 @@ public class UserServiceTest {
     @Test
     public void shouldCreateUserLoginDetails_whenCreatingNewUser() throws Exception {
         UserDetail userDetail = new UserDetail("Hari", "hari@yopmail.com", "password123", new Date(1552745055166l));
-        when(mockUserDetailsRepo.existsById("Hari")).thenReturn(false);
+//        when(mockUserDetailsRepo.existsById("Hari")).thenReturn(false);
         subject.create(userDetail);
         verify(mockUserDetailsRepo, times(1)).save(any(UserDetail.class));
     }
@@ -42,5 +42,13 @@ public class UserServiceTest {
     public void shouldReturnAllUserLoginDetails_whenRetrievingAll() {
         subject.retrieveAll();
         verify(mockUserDetailsRepo, times(1)).findAll();
+    }
+
+    @Test
+    public void shouldReturnTheUpdatedUser_whenValidUpdateValuesArePassed() throws UserAlreadyExistsException {
+        UserDetail userDetail = new UserDetail("Hari", "hari@yopmail.com", "password123", new Date(1552745055166l));
+//        when(mockUserDetailsRepo.existsById("Hari")).thenReturn(false);
+        subject.create(userDetail);
+        verify(mockUserDetailsRepo, times(1)).save(any(UserDetail.class));
     }
 }

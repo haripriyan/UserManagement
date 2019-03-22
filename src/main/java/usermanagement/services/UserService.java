@@ -3,6 +3,7 @@ package usermanagement.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import usermanagement.exceptions.UserAlreadyExistsException;
+import usermanagement.exceptions.UserNotFoundException;
 import usermanagement.models.UserDetail;
 import usermanagement.repositories.UserDetailsRepository;
 
@@ -26,5 +27,9 @@ public class UserService {
 
     public List<UserDetail> retrieveAll() {
         return (List<UserDetail>) userDetailsRepository.findAll();
+    }
+
+    public UserDetail update(UserDetail userDetail) throws UserNotFoundException {
+        return null;
     }
 }

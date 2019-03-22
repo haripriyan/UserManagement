@@ -19,21 +19,22 @@ public class UserDetail {
     @Column(nullable = false)
     private Date lastLogin;
 
+    public UserDetail() {}
+
+    public UserDetail(String name, String email) {
+        this(name, email, null, null);
+    }
+
+    public UserDetail(CreateUserRequest request) {
+        this(request.getName(), request.getEmail(), request.getPassword(), new Date());
+    }
+
     public UserDetail(String name, String email, String password, Date lastLogIn) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.lastLogin = lastLogIn;
     }
-
-    public UserDetail(CreateUserRequest request) {
-        this.name = request.getName();
-        this.email = request.getEmail();
-        this.password = request.getPassword();
-        this.lastLogin = new Date();
-    }
-
-    public UserDetail() {}
 
     public String getName() {
         return name;

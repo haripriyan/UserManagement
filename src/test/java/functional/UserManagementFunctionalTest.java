@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import usermanagement.requests.UpdateUserRequest;
 import usermanagement.UserManagementApplication;
 import usermanagement.models.UserDetail;
 import usermanagement.requests.CreateUserRequest;
@@ -61,6 +62,17 @@ public class UserManagementFunctionalTest {
         List<UserDetail> users = responseEntity.getBody();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(users.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldReturnUpdatedUserModel_whenUpdatingTheEmailOfAUser() {
+        createUser(new CreateUserRequest("Hari", "hari@yopmail.com", "password123"));
+        ResponseEntity<UserDetail> responseEntity = restTemplate.postForEntity("/api/users/Hari", new UpdateUserRequest("haripriyan@yopmail.com"), UserDetail.class);
+        UserDetail body = responseEntity.getBody();
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(body.getName()).isEqualTo("Hari");
+        assertThat(body.getEmail()).isEqualTo("haripriyan@yopmail.com");
     }
 
     private ResponseEntity<UserDetail> createUser(CreateUserRequest user2) {

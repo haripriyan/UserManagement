@@ -9,14 +9,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import usermanagement.exceptions.UserAlreadyExistsException;
+import usermanagement.exceptions.UserNotFoundException;
 import usermanagement.models.UserDetail;
 import usermanagement.services.UserService;
 
 import java.util.Date;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,5 +58,30 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200));
         verify(mockUserService, times(1)).retrieveAll();
+    }
+
+    @Test
+    public void shouldUpdateEmailOfGivenUser_whenValidUserAndUpdateRequestArePassed() throws Exception {
+        when(mockUserService.update(any(UserDetail.class))).thenReturn(new UserDetail("Bruce", "bruce@yopmail.com", "password123",new Date(1552745055166l)));
+        mvc.perform(put("/api/users/Bruce")
+                .contentType(MediaType.APPLICATION_JSON).content("{\"newEmail\":\"brucewayne@yopmail.com\"}"))
+                .andExpect(status().is(200));
+        verify(mockUserService, times(1)).update(any());
+    }
+
+    @Test
+    public void shouldReturn404_whenUserIsNotFound() throws Exception {
+        when(mockUserService.update(any(UserDetail.class))).thenThrow(new UserNotFoundException());
+        mvc.perform(put("/api/users/Bruce")
+                .contentType(MediaType.APPLICATION_JSON).content("{\"newEmail\":\"brucewayne@yopmail.com\"}"))
+                .andExpect(status().is(404));
+        verify(mockUserService, times(1)).update(any());
+    }
+
+    @Test
+    public void shouldReturn400_whenValidUserAndEmailIsInvalid() throws Exception {
+        mvc.perform(put("/api/users/Bruce")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400));
     }
 }
